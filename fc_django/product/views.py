@@ -8,6 +8,20 @@ from order.forms import RegisterForm as OrderForm
 from django.utils.decorators import method_decorator
 from fcuser.decorators import admin_required
 
+#rest_framework
+from rest_framework import generics
+from rest_framework import mixins
+from .serializers import ProductSerializer
+
+class ProductListAPI(generics.GenericAPIView, mixins.ListModelMixin):
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        return Product.objects.all().order_by('id')
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request,*args, **kwargs )
+
 
 
 class ProductList(ListView):
