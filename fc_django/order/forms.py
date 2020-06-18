@@ -23,25 +23,25 @@ class RegisterForm(forms.Form):
         cleaned_data = super().clean()
         quantity = cleaned_data.get('quantity')
         product = cleaned_data.get('product')
-        fcuser = self.request.session.get('user') # email을 가져옴
+        # fcuser = self.request.session.get('user') # email을 가져옴
 
         # user를 들고 오려면 세션에 접근해야함. -> form변경해야함.
         print(self.request.session)
-        if quantity and product and fcuser:
-            with transaction.atomic(): # 트랜젝션 처리
-                prod = Product.objects.get(pk=product)
-                order = Order(
-                quantity = quantity,
-                product = prod,
-                fcuser = Fcuser.objects.get(email=fcuser)
-                )
-                order.save()
-                prod.stock -= quantity # 재고 차감
-                prod.save()
+        # if quantity and product and fcuser:
+        #     with transaction.atomic(): # 트랜젝션 처리
+        #         prod = Product.objects.get(pk=product)
+        #         order = Order(
+        #         quantity = quantity,
+        #         product = prod,
+        #         fcuser = Fcuser.objects.get(email=fcuser)
+        #         )
+        #         order.save()
+        #         prod.stock -= quantity # 재고 차감
+        #         prod.save()
 
-           
-        else:
-            self.product = product # redirect할때 값을 넘겨주ㄱ는거
+
+        if not (quantity and product):
+            # self.product = product # redirect할때 값을 넘겨주ㄱ는거
             self.add_error('quantity', '값이 없습니다.')
             self.add_error('product', '값이 없습니다.')
 
